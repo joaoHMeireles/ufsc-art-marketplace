@@ -9,7 +9,8 @@ import {
   query, 
   where, 
   orderBy, 
-  onSnapshot
+  onSnapshot,
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Chat, ChatMessage } from '../types';
@@ -73,7 +74,7 @@ export class ChatService {
       senderId,
       receiverId,
       message,
-      timestamp: new Date(),
+      timestamp: Timestamp.now(),
       isRead: false,
     };
     

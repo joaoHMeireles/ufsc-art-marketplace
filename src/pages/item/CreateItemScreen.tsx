@@ -100,10 +100,8 @@ const CreateItemScreen = () => {
 
     setLoading(true);
     try {
-      // Upload das imagens
       const base64Images = await Promise.all(images.map(uri => imageToBase64(uri)))
 
-      // Criar item
       const itemData = {
         title,
         description,

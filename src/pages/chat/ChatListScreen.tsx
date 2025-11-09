@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ChatService } from '../../services/chatService';
 import { Chat } from '../../types';
 import { useAuth } from '../../AuthContext';
+import { Timestamp } from 'firebase/firestore';
 
 const ChatListScreen = () => {
   const [chats, setChats] = useState<Chat[]>([]);
@@ -25,7 +26,6 @@ const ChatListScreen = () => {
     if (user) {
       loadChats();
       
-      // Escutar mudanças em tempo real
       const unsubscribe = ChatService.subscribeToUserChats(user.id, (updatedChats) => {
         setChats(updatedChats);
         setLoading(false);
@@ -49,7 +49,8 @@ const ChatListScreen = () => {
     }
   };
 
-  const formatTime = (date: Date) => {
+  const formatTime = (time: Timestamp) => {
+    const date = time.toDate();
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
     

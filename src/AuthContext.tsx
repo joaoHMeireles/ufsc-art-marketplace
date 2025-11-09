@@ -41,12 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setFirebaseUser(firebaseUser);
       
       if (firebaseUser) {
-        // Buscar dados do usuário no Firestore
         const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
         if (userDoc.exists()) {
           setUser(userDoc.data() as User);
         } else {
-          // Criar documento do usuário se não existir
           const newUser: User = {
             id: firebaseUser.uid,
             email: firebaseUser.email || '',

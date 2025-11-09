@@ -16,6 +16,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { ChatService } from '../../services/chatService';
 import { ChatMessage } from '../../types';
 import { useAuth } from '../../AuthContext';
+import { Timestamp } from 'firebase/firestore';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -32,17 +33,14 @@ const ChatScreen = () => {
   useEffect(() => {
     loadMessages();
     
-    // Escutar mensagens em tempo real
     const unsubscribe = ChatService.subscribeToChatMessages(chatId, (updatedMessages) => {
       setMessages(updatedMessages);
       setLoading(false);
       
-      // Marcar mensagens como lidas
       if (user) {
         ChatService.markMessagesAsRead(chatId, user.id);
       }
       
-      // Scroll para a última mensagem
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
@@ -56,7 +54,6 @@ const ChatScreen = () => {
       const chatMessages = await ChatService.getChatMessages(chatId);
       setMessages(chatMessages);
       
-      // Marcar mensagens como lidas
       if (user) {
         await ChatService.markMessagesAsRead(chatId, user.id);
       }
@@ -75,7 +72,6 @@ const ChatScreen = () => {
     setNewMessage('');
 
     try {
-      // Encontrar o receiver (outro participante do chat)
       const otherParticipant = messages.length > 0 
         ? messages.find(m => m.senderId !== user.id)?.senderId
         : null;
@@ -89,12 +85,12 @@ const ChatScreen = () => {
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
       Alert.alert('Erro', 'Não foi possível enviar a mensagem');
-      setNewMessage(messageText); // Restaurar mensagem se falhou
+      setNewMessage(messageText); 
     }
   };
 
-  const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('pt-BR', { 
+  const formatTime = (time: Timestamp) => {
+    return time.toDate().toLocaleTimeString('pt-BR', { 
       hour: '2-digit', 
       minute: '2-digit' 
     });
@@ -148,14 +144,6 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>{itemTitle}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
       <KeyboardAvoidingView 
         style={styles.chatContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

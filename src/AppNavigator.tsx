@@ -5,8 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from './AuthContext';
-
-// Importar telas
 import LoginScreen from './pages/auth/LoginScreen';
 import RegisterScreen from './pages/auth/RegisterScreen';
 import HomeScreen from './pages/home/HomeScreen';
@@ -106,7 +104,6 @@ const AppNavigator = () => {
         }}
       >
         {user ? (
-          // Usuário logado 
           <>
             <Stack.Screen 
               name="Main" 
@@ -140,7 +137,6 @@ const AppNavigator = () => {
             />
           </>
         ) : (
-          // Usuário não logado
           <>
             <Stack.Screen 
               name="Login" 

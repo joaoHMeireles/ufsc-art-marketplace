@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../AuthContext';
+import { ItemService } from '../../services/itemService';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { user, signOut } = useAuth();
+  const [ itensNumber, setItensNumber ] = useState(0)
 
   const handleSignOut = () => {
     Alert.alert(
@@ -25,6 +27,17 @@ const ProfileScreen = () => {
         { text: 'Sair', style: 'destructive', onPress: signOut }
       ]
     );
+  };
+
+  useEffect(() => {
+      loadItems();
+  }, []);
+  
+  const loadItems = async () => {
+    if (!user) return;
+      
+    const userItems = await ItemService.getUserItems(user.id);
+    setItensNumber(userItems.length)
   };
 
   const menuItems = [
@@ -84,7 +97,6 @@ const ProfileScreen = () => {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Perfil do usuário */}
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
@@ -103,7 +115,7 @@ const ProfileScreen = () => {
 
           <View style={styles.userStats}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
+              <Text style={styles.statNumber}>{itensNumber}</Text>
               <Text style={styles.statLabel}>Itens</Text>
             </View>
             <View style={styles.statDivider} />

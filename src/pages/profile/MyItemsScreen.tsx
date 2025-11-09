@@ -59,7 +59,6 @@ const MyItemsScreen = () => {
   const handleEditItem = () => {
     if (selectedItem) {
       setShowActionModal(false);
-      // Navegar para tela de edição (implementar se necessário)
       Alert.alert('Editar', 'Funcionalidade em desenvolvimento');
     }
   };
@@ -72,7 +71,6 @@ const MyItemsScreen = () => {
         isAvailable: !selectedItem.isAvailable
       });
       
-      // Atualizar item na lista local
       setItems(prev => prev.map(item => 
         item.id === selectedItem.id 
           ? { ...item, isAvailable: !item.isAvailable }
@@ -113,7 +111,6 @@ const MyItemsScreen = () => {
     try {
       await ItemService.deleteItem(selectedItem.id);
       
-      // Remover item da lista local
       setItems(prev => prev.filter(item => item.id !== selectedItem.id));
       
       setShowActionModal(false);
@@ -252,9 +249,6 @@ const MyItemsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
         <Text style={styles.headerTitle}>Meus Itens</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('CreateItem' as never)}

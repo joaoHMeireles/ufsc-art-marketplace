@@ -4,11 +4,11 @@
     "slug": "ArteUFSC",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/art.icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/art.icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,14 +17,20 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/art.icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.joaohmeireles.ArteUFSC"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/art.icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "19d46043-3248-47dd-8f74-045d4eba4e2b"
+      }
     }
   }
 }
