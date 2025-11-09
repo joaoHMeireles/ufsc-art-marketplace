@@ -82,7 +82,7 @@ const HomeScreen = () => {
   const renderItem = ({ item }: { item: ArtItem }) => (
     <TouchableOpacity
       style={styles.itemCard}
-      // onPress={() => navigation.navigate('ItemDetail' as never, { itemId: item.id } as never)}
+      onPress={() => navigation.navigate('ItemDetail' as never, { itemId: item.id } as never)}
     >
       <Image
         source={{ uri: item.images[0] || 'https://via.placeholder.com/300x200' }}

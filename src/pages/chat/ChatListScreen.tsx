@@ -66,13 +66,7 @@ const ChatListScreen = () => {
     }
   };
 
-  const getOtherParticipant = (chat: Chat) => {
-    if (!user) return null;
-    return chat.participants.find(id => id !== user.id);
-  };
-
   const renderChat = ({ item: chat }: { item: Chat }) => {
-    const otherParticipant = getOtherParticipant(chat);
     const isUnread = chat.lastMessage && 
       chat.lastMessage.receiverId === user?.id && 
       !chat.lastMessage.isRead;
@@ -80,10 +74,10 @@ const ChatListScreen = () => {
     return (
       <TouchableOpacity
         style={styles.chatItem}
-        // onPress={() => navigation.navigate('Chat' as never, { 
-        //   chatId: chat.id, 
-        //   itemTitle: chat.itemTitle 
-        // } as never)}
+        onPress={() => navigation.navigate('Chat' as never, { 
+          chatId: chat.id, 
+          itemTitle: chat.itemTitle 
+        } as never)}
       >
         <View style={styles.chatAvatar}>
           <Text style={styles.chatAvatarText}>

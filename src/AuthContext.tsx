@@ -1,8 +1,19 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { 
+  User as FirebaseUser,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  updateProfile
+} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from './config/firebase';
 import { User } from './types';
 
 interface AuthContextType {
   user: User | null;
+  firebaseUser: FirebaseUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string, phone?: string) => Promise<void>;
@@ -22,37 +33,74 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Simulação simples - usuário não logado por padrão
   useEffect(() => {
-    // Simular loading inicial
-    setTimeout(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setFirebaseUser(firebaseUser);
+      
+      if (firebaseUser) {
+        // Buscar dados do usuário no Firestore
+        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+        if (userDoc.exists()) {
+          setUser(userDoc.data() as User);
+        } else {
+          // Criar documento do usuário se não existir
+          const newUser: User = {
+            id: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            name: firebaseUser.displayName || '',
+            createdAt: new Date(),
+          };
+          await setDoc(doc(db, 'users', firebaseUser.uid), newUser);
+          setUser(newUser);
+        }
+      } else {
+        setUser(null);
+      }
+      
       setLoading(false);
-    }, 1000);
+    });
+
+    return unsubscribe;
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    // Implementação mock
-    console.log('Sign in:', email, password);
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   const signUp = async (email: string, password: string, name: string, phone?: string) => {
-    // Implementação mock
-    console.log('Sign up:', email, password, name, phone);
+    const { user: firebaseUser } = await createUserWithEmailAndPassword(auth, email, password);
+    
+    await updateProfile(firebaseUser, { displayName: name });
+    
+    const newUser: User = {
+      id: firebaseUser.uid,
+      email: firebaseUser.email || '',
+      name,
+      phone,
+      createdAt: new Date(),
+    };
+    
+    await setDoc(doc(db, 'users', firebaseUser.uid), newUser);
   };
 
   const signOut = async () => {
-    setUser(null);
+    await firebaseSignOut(auth);
   };
 
   const updateUserProfile = async (data: Partial<User>) => {
-    if (!user) return;
-    setUser({ ...user, ...data });
+    if (!user || !firebaseUser) return;
+    
+    const updatedUser = { ...user, ...data };
+    await setDoc(doc(db, 'users', firebaseUser.uid), updatedUser);
+    setUser(updatedUser);
   };
 
   const value: AuthContextType = {
     user,
+    firebaseUser,
     loading,
     signIn,
     signUp,

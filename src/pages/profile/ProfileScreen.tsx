@@ -92,11 +92,6 @@ const ProfileScreen = () => {
                 {user?.name?.charAt(0).toUpperCase() || 'U'}
               </Text>
             </View>
-            {user?.isUfscStudent && (
-              <View style={styles.ufscBadge}>
-                <Text style={styles.ufscBadgeText}>UFSC</Text>
-              </View>
-            )}
           </View>
 
           <Text style={styles.userName}>{user?.name}</Text>

@@ -99,27 +99,6 @@ const EditProfileScreen = () => {
             <Text style={styles.infoLabel}>Email</Text>
             <Text style={styles.infoValue}>{user?.email}</Text>
           </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Tipo de Conta</Text>
-            <View style={styles.accountTypeContainer}>
-              <Text style={styles.accountTypeText}>
-                {user?.isUfscStudent ? 'Estudante UFSC' : 'Conta Regular'}
-              </Text>
-              {user?.isUfscStudent && (
-                <View style={styles.ufscBadge}>
-                  <Text style={styles.ufscBadgeText}>UFSC</Text>
-                </View>
-              )}
-            </View>
-          </View>
-
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Membro desde</Text>
-            <Text style={styles.infoValue}>
-              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR') : 'N/A'}
-            </Text>
-          </View>
         </View>
 
         <View style={styles.section}>

@@ -22,7 +22,6 @@ const CreateItemScreen = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  const [location, setLocation] = useState('');
   const [type, setType] = useState<'venda' | 'aluguel' | 'doacao'>('venda');
   const [category, setCategory] = useState<'pintura' | 'escultura' | 'desenho' | 'fotografia' | 'outros'>('pintura');
   const [condition, setCondition] = useState<'novo' | 'usado' | 'precisa_restauro'>('usado');
@@ -84,7 +83,7 @@ const CreateItemScreen = () => {
   };
 
   const handleSubmit = async () => {
-    if (!title || !description || !location) {
+    if (!title || !description) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
       return;
     }
@@ -102,7 +101,7 @@ const CreateItemScreen = () => {
     setLoading(true);
     try {
       // Upload das imagens
-      const uploadedImages = await ItemService.uploadImages(images, 'temp');
+      const base64Images = await Promise.all(images.map(uri => imageToBase64(uri)))
 
       // Criar item
       const itemData = {
@@ -111,12 +110,11 @@ const CreateItemScreen = () => {
         price: type !== 'doacao' ? parseFloat(price) : undefined,
         type,
         category,
-        images: uploadedImages,
+        images: base64Images,
         condition,
         sellerId: user!.id,
         sellerName: user!.name,
         sellerPhone: user!.phone,
-        location,
         isAvailable: true,
       };
 
@@ -132,6 +130,18 @@ const CreateItemScreen = () => {
       setLoading(false);
     }
   };
+
+  async function imageToBase64(imageUri: string): Promise<string> {
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 
   const getTypeLabel = (typeKey: string) => {
     return typeOptions.find(option => option.key === typeKey)?.label || typeKey;
@@ -200,16 +210,6 @@ const CreateItemScreen = () => {
               onChangeText={setDescription}
               multiline
               numberOfLines={4}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Localização *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: Centro, UFSC, etc."
-              value={location}
-              onChangeText={setLocation}
             />
           </View>
         </View>

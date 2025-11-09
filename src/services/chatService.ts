@@ -9,8 +9,7 @@ import {
   query, 
   where, 
   orderBy, 
-  onSnapshot,
-  serverTimestamp
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Chat, ChatMessage } from '../types';
@@ -19,11 +18,9 @@ export class ChatService {
   private static readonly CHATS_COLLECTION = 'chats';
   private static readonly MESSAGES_COLLECTION = 'messages';
 
-  // Criar ou obter chat entre dois usuários
   static async getOrCreateChat(user1Id: string, user2Id: string, itemId: string, itemTitle: string): Promise<string> {
     const participants = [user1Id, user2Id].sort();
     
-    // Verificar se já existe um chat
     const q = query(
       collection(db, this.CHATS_COLLECTION),
       where('participants', '==', participants),
@@ -36,7 +33,6 @@ export class ChatService {
       return querySnapshot.docs[0].id;
     }
     
-    // Criar novo chat
     const chatData: Omit<Chat, 'id'> = {
       participants,
       itemId,
@@ -49,7 +45,6 @@ export class ChatService {
     return docRef.id;
   }
 
-  // Buscar chats do usuário
   static async getUserChats(userId: string): Promise<Chat[]> {
     const q = query(
       collection(db, this.CHATS_COLLECTION),
@@ -67,7 +62,6 @@ export class ChatService {
     return chats;
   }
 
-  // Enviar mensagem
   static async sendMessage(
     chatId: string, 
     senderId: string, 
@@ -85,7 +79,6 @@ export class ChatService {
     
     const docRef = await addDoc(collection(db, this.MESSAGES_COLLECTION), messageData);
     
-    // Atualizar último timestamp do chat
     await updateDoc(doc(db, this.CHATS_COLLECTION, chatId), {
       updatedAt: new Date(),
       lastMessage: messageData,
@@ -94,7 +87,6 @@ export class ChatService {
     return docRef.id;
   }
 
-  // Buscar mensagens do chat
   static async getChatMessages(chatId: string): Promise<ChatMessage[]> {
     const q = query(
       collection(db, this.MESSAGES_COLLECTION),
@@ -112,7 +104,6 @@ export class ChatService {
     return messages;
   }
 
-  // Escutar mensagens em tempo real
   static subscribeToChatMessages(
     chatId: string, 
     callback: (messages: ChatMessage[]) => void
@@ -132,7 +123,6 @@ export class ChatService {
     });
   }
 
-  // Escutar chats do usuário em tempo real
   static subscribeToUserChats(
     userId: string, 
     callback: (chats: Chat[]) => void
@@ -152,7 +142,6 @@ export class ChatService {
     });
   }
 
-  // Marcar mensagens como lidas
   static async markMessagesAsRead(chatId: string, userId: string): Promise<void> {
     const q = query(
       collection(db, this.MESSAGES_COLLECTION),
@@ -169,9 +158,7 @@ export class ChatService {
     await Promise.all(updatePromises);
   }
 
-  // Deletar chat
   static async deleteChat(chatId: string): Promise<void> {
-    // Deletar todas as mensagens do chat
     const messagesQuery = query(
       collection(db, this.MESSAGES_COLLECTION),
       where('chatId', '==', chatId)
@@ -184,11 +171,9 @@ export class ChatService {
     
     await Promise.all(deleteMessagePromises);
     
-    // Deletar o chat
     await deleteDoc(doc(db, this.CHATS_COLLECTION, chatId));
   }
 
-  // Buscar chat por ID
   static async getChatById(chatId: string): Promise<Chat | null> {
     const docRef = doc(db, this.CHATS_COLLECTION, chatId);
     const docSnap = await getDoc(docRef);
@@ -199,7 +184,6 @@ export class ChatService {
     return null;
   }
 
-  // Contar mensagens não lidas
   static async getUnreadMessageCount(userId: string): Promise<number> {
     const q = query(
       collection(db, this.MESSAGES_COLLECTION),

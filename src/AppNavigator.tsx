@@ -105,8 +105,8 @@ const AppNavigator = () => {
           },
         }}
       >
-        {/* {user ? ( */}
-          {/* // Usuário logado */}
+        {user ? (
+          // Usuário logado 
           <>
             <Stack.Screen 
               name="Main" 
@@ -139,8 +139,8 @@ const AppNavigator = () => {
               options={{ title: 'Editar Perfil' }}
             />
           </>
-        {/* // ) : (
-          // Usuário não logado */}
+        ) : (
+          // Usuário não logado
           <>
             <Stack.Screen 
               name="Login" 
@@ -153,7 +153,7 @@ const AppNavigator = () => {
               options={{ title: 'Criar Conta' }}
             />
           </>
-        {/* )} */}
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -15,13 +15,12 @@ import {
   DocumentData
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage } from '../config/firebase';
+import { db } from '../config/firebase';
 import { ArtItem, FilterOptions } from '../types';
 
 export class ItemService {
   private static readonly COLLECTION_NAME = 'items';
 
-  // Criar novo item
   static async createItem(item: Omit<ArtItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     const now = new Date();
     const itemData = {
@@ -34,7 +33,6 @@ export class ItemService {
     return docRef.id;
   }
 
-  // Buscar item por ID
   static async getItemById(id: string): Promise<ArtItem | null> {
     const docRef = doc(db, this.COLLECTION_NAME, id);
     const docSnap = await getDoc(docRef);
@@ -45,7 +43,6 @@ export class ItemService {
     return null;
   }
 
-  // Buscar todos os itens com filtros
   static async getItems(
     filters: FilterOptions = {}, 
     lastDoc?: QueryDocumentSnapshot<DocumentData>,
@@ -80,7 +77,6 @@ export class ItemService {
     querySnapshot.forEach((doc) => {
       const item = { id: doc.id, ...doc.data() } as ArtItem;
       
-      // Aplicar filtro de preço no frontend (Firestore não suporta range queries complexas)
       if (filters.priceRange) {
         const { min, max } = filters.priceRange;
         if (item.price !== undefined) {
@@ -99,7 +95,6 @@ export class ItemService {
     };
   }
 
-  // Buscar itens do usuário
   static async getUserItems(userId: string): Promise<ArtItem[]> {
     const q = query(
       collection(db, this.COLLECTION_NAME),
@@ -117,7 +112,6 @@ export class ItemService {
     return items;
   }
 
-  // Atualizar item
   static async updateItem(id: string, updates: Partial<ArtItem>): Promise<void> {
     const docRef = doc(db, this.COLLECTION_NAME, id);
     await updateDoc(docRef, {
@@ -126,50 +120,14 @@ export class ItemService {
     });
   }
 
-  // Deletar item
   static async deleteItem(id: string): Promise<void> {
-    const item = await this.getItemById(id);
-    if (item) {
-      // Deletar imagens do storage
-      for (const imageUrl of item.images) {
-        try {
-          const imageRef = ref(storage, imageUrl);
-          await deleteObject(imageRef);
-        } catch (error) {
-          console.error('Erro ao deletar imagem:', error);
-        }
-      }
-    }
-    
     await deleteDoc(doc(db, this.COLLECTION_NAME, id));
   }
 
-  // Upload de imagem
-  static async uploadImage(imageUri: string, itemId: string, imageIndex: number): Promise<string> {
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
-    
-    const imageRef = ref(storage, `items/${itemId}/image_${imageIndex}_${Date.now()}`);
-    await uploadBytes(imageRef, blob);
-    
-    return await getDownloadURL(imageRef);
-  }
-
-  // Upload múltiplas imagens
-  static async uploadImages(imageUris: string[], itemId: string): Promise<string[]> {
-    const uploadPromises = imageUris.map((uri, index) => 
-      this.uploadImage(uri, itemId, index)
-    );
-    
-    return Promise.all(uploadPromises);
-  }
-
-  // Marcar item como indisponível
   static async markAsUnavailable(id: string): Promise<void> {
     await this.updateItem(id, { isAvailable: false });
   }
 
-  // Buscar itens por categoria
   static async getItemsByCategory(category: string): Promise<ArtItem[]> {
     const q = query(
       collection(db, this.COLLECTION_NAME),
@@ -188,7 +146,6 @@ export class ItemService {
     return items;
   }
 
-  // Buscar itens por tipo
   static async getItemsByType(type: 'venda' | 'aluguel' | 'doacao'): Promise<ArtItem[]> {
     const q = query(
       collection(db, this.COLLECTION_NAME),

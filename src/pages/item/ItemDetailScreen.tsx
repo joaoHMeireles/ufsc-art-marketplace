@@ -58,10 +58,10 @@ const ItemDetailScreen = () => {
         item.title
       );
       
-      // navigation.navigate('Chat' as never, { 
-      //   chatId, 
-      //   itemTitle: item.title 
-      // } as never);
+      navigation.navigate('Chat' as never, { 
+        chatId, 
+        itemTitle: item.title 
+      } as never);
     } catch (error) {
       console.error('Erro ao criar chat:', error);
       Alert.alert('Erro', 'Não foi possível iniciar a conversa');
@@ -197,12 +197,6 @@ const ItemDetailScreen = () => {
               <Ionicons name="checkmark-circle-outline" size={20} color="#666" />
               <Text style={styles.infoLabel}>Estado:</Text>
               <Text style={styles.infoValue}>{getConditionLabel(item.condition)}</Text>
-            </View>
-
-            <View style={styles.infoRow}>
-              <Ionicons name="location-outline" size={20} color="#666" />
-              <Text style={styles.infoLabel}>Local:</Text>
-              <Text style={styles.infoValue}>{item.location}</Text>
             </View>
           </View>
 

@@ -84,7 +84,7 @@ const RegisterScreen = () => {
               <Text style={styles.label}>Email *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="seu.email@grad.ufsc.br"
+                placeholder="user@gmail.com"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"

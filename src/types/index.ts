@@ -3,8 +3,6 @@ export interface User {
   email: string;
   name: string;
   phone?: string;
-  avatar?: string;
-  isUfscStudent: boolean;
   createdAt: Date;
 }
 
@@ -20,7 +18,6 @@ export interface ArtItem {
   sellerId: string;
   sellerName: string;
   sellerPhone?: string;
-  location: string;
   isAvailable: boolean;
   createdAt: Date;
   updatedAt: Date;
