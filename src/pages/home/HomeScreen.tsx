@@ -223,7 +223,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Arte UFSC</Text>
+        <Text style={styles.headerTitle}>Artsc</Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('CreateItem' as never)}

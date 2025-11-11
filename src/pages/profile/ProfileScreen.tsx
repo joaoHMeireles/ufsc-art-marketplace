@@ -67,7 +67,7 @@ const ProfileScreen = () => {
       title: 'Sobre',
       subtitle: 'Versão e informações',
       icon: 'information-circle-outline',
-      onPress: () => Alert.alert('Sobre', 'Arte UFSC v1.0\n\nApp para compartilhar materiais de arte entre alunos da UFSC.'),
+      onPress: () => Alert.alert('Sobre', 'Artsc v1.0\n\nApp para compartilhar materiais de arte entre alunos da UFSC.'),
     },
   ];
 
@@ -146,7 +146,7 @@ const ProfileScreen = () => {
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Arte UFSC v1.0</Text>
+          <Text style={styles.footerText}>Artsc v1.0</Text>
           <Text style={styles.footerSubtext}>Feito para a comunidade artística da UFSC</Text>
         </View>
       </ScrollView>

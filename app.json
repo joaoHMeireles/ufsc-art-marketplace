@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ArteUFSC",
-    "slug": "ArteUFSC",
+    "name": "Artsc",
+    "slug": "Artsc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/art.icon.png",
@@ -22,7 +22,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.joaohmeireles.ArteUFSC"
+      "package": "com.joaohmeireles.Artsc"
     },
     "web": {
       "favicon": "./assets/art.icon.png"

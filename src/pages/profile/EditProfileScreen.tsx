@@ -104,7 +104,7 @@ const EditProfileScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Sobre o App</Text>
           <Text style={styles.aboutText}>
-            O Arte UFSC é uma plataforma criada para conectar estudantes e artistas 
+            O Artsc é uma plataforma criada para conectar estudantes e artistas 
             da Universidade Federal de Santa Catarina, permitindo a troca, aluguel e 
             doação de materiais de arte.
           </Text>
@@ -126,14 +126,14 @@ const EditProfileScreen = () => {
           
           <TouchableOpacity 
             style={styles.contactButton}
-            onPress={() => Alert.alert('Contato', 'Email: suporte@arteufsc.com\nTelefone: (48) 3721-9000')}
+            onPress={() => Alert.alert('Contato', 'Email: suporte@Artsc.com\nTelefone: (48) 3721-9000')}
           >
             <Text style={styles.contactButtonText}>Entrar em Contato</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Arte UFSC v1.0</Text>
+          <Text style={styles.footerText}>Artsc v1.0</Text>
           <Text style={styles.footerSubtext}>
             Desenvolvido com ❤️ para a comunidade artística da UFSC
           </Text>

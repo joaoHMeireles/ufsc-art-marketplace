@@ -54,7 +54,7 @@ const LoginScreen = () => {
             <View style={styles.logo}>
               <Text style={styles.logoText}>🎨</Text>
             </View>
-            <Text style={styles.title}>Arte UFSC</Text>
+            <Text style={styles.title}>Artsc</Text>
             <Text style={styles.subtitle}>Compartilhe e encontre materiais de arte</Text>
           </View>
 
